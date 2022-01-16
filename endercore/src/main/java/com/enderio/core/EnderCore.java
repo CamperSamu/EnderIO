@@ -1,15 +1,14 @@
 package com.enderio.core;
 
 import com.enderio.core.common.network.EnderNetwork;
-import net.minecraftforge.fml.common.Mod;
+import net.fabricmc.api.ModInitializer;
 
-import javax.annotation.Nonnull;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 @Mod(EnderCore.MODID)
-public class EnderCore {
-    public static final @Nonnull String MODID = "endercore";
+public class EnderCore implements ModInitializer {
+    public static final @NotNull String MODID = "endercore";
 
     public static final Logger LOGGER = LogManager.getLogManager().getLogger(MODID);
 

@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "id": "endercore",
+  "version": "${file.jarVersion}",
+
+  "name": "Ender Core",
+  "description": "Library mod used by EnderIO, EnderZoo, and others",
+  "authors": [
+    "tterrag",
+    "CrazyPants",
+    "HenryLoenwind",
+    "Rover656",
+    "HypherionSA"
+  ],
+  "contact": {
+    "homepage": "http://enderio.com",
+    "sources": "https://github.com/SleepyTrousers/EnderIO"
+  },
+
+  "license": "CC0-1.0",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.enderio.core.EnderCore"
+    ]
+  },
+  "mixins": [
+    "mixins.endercore.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.11.3",
+    "fabric": "*",
+    "minecraft": "1.18.x",
+    "java": ">=17"
+  },
+  "suggests": {
+    "another-mod": "enderio-base"
+  }
+}

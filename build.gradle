@@ -1,35 +1,26 @@
-buildscript {
-    repositories {
-        // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
-        maven { url = 'https://maven.minecraftforge.net' }
-        maven { url = 'https://maven.parchmentmc.org' }
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-        classpath 'org.parchmentmc:librarian:1.+'
-        classpath 'org.spongepowered:mixingradle:0.7.+'
-    }
-}
+//buildscript {
+//    repositories {
+//        // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
+//        maven {
+//            name = 'Fabric'
+//            url = 'https://maven.fabricmc.net/'
+//        }
+//        gradlePluginPortal()
+//        mavenCentral()
+//    }
+//}
 
 plugins {
     id 'com.github.johnrengelman.shadow' version "${shadow_version}"
+    id 'fabric-loom' version '0.10-SNAPSHOT' apply false
 }
 
 subprojects {
-    apply plugin: 'net.minecraftforge.gradle'
-    apply plugin: 'org.parchmentmc.librarian.forgegradle'
+    apply plugin: 'fabric-loom'
     apply plugin: 'eclipse'
+    apply plugin: 'idea'
     apply plugin: 'maven-publish'
     apply plugin: 'com.github.johnrengelman.shadow'
-
-    def enableMixin = false
-    if (project.hasProperty("enable_mixin"))
-        enableMixin = project.enable_mixin
-
-    // MixinGradle:
-    if (enableMixin)
-        apply plugin: 'org.spongepowered.mixin'
 
     version = getVersionString(project)
     group = 'com.enderio'
@@ -37,79 +28,74 @@ subprojects {
     def modId = getModId(project)
 
     // Mojang ships Java 16 to end users in 1.17+ instead of Java 8 in 1.16 or lower, so your mod should target Java 16.
-    java.toolchain.languageVersion = JavaLanguageVersion.of(16)
+    java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
     println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
-    minecraft {
+//    minecraft {
 //        mappings channel: 'official', version: "${minecraft_version}"
-
-        if (project.hasProperty("transformer")) {
-            mappings channel: 'parchment', version: "${mappings_version}-${minecraft_version}"
-            println("Found accessTransformer for ${project.name}: ${project.transformer}")
-            accessTransformer = file(project.transformer)
-        } else {
-            mappings channel: 'parchment', version: "${mappings_version}-${minecraft_version}"
-        }
-
-        // Default run configurations.
-        runs {
-            client {
-                workingDirectory project.file('run')
-
-                property 'forge.logging.markers', 'REGISTRIES'
-                property 'forge.logging.console.level', 'debug'
-
-                // Allow dependent mixins to run
-                property 'mixin.env.remapRefMap', 'true'
-                property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
-
-                mods {
-                    // TODO: Dynamic names??
-                    examplemod {
-                        source sourceSets.main
-                    }
-                }
-            }
-
-            server {
-                workingDirectory project.file('run')
-
-                property 'forge.logging.console.level', 'debug'
-
-                // Allow dependent mixins to run
-                property 'mixin.env.remapRefMap', 'true'
-                property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
-
-                mods {
-                    // TODO: Dynamic names??
-                    examplemod {
-                        source sourceSets.main
-                    }
-                }
-            }
-
-            data {
-                workingDirectory project.file('run')
-
-                property 'forge.logging.markers', 'REGISTRIES'
-                property 'forge.logging.console.level', 'debug'
-
-                // Allow dependent mixins to run
-                property 'mixin.env.remapRefMap', 'true'
-                property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
-
-                // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-                args '--mod', modId, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-
-                mods {
-                    // TODO: Dynamic names??
-                    examplemod {
-                        source sourceSets.main
-                    }
-                }
-            }
-        }
-    }
+//
+//        if (project.hasProperty("transformer")) {
+//            mappings channel: 'parchment', version: "${mappings_version}-${minecraft_version}"
+//            println("Found accessTransformer for ${project.name}: ${project.transformer}")
+//            accessTransformer = file(project.transformer)
+//        } else {
+//            mappings channel: 'parchment', version: "${mappings_version}-${minecraft_version}"
+//        }
+//
+//         //Default run configurations.
+//        runs {
+//            client {
+//                workingDirectory project.file('run')
+//
+//                property 'forge.logging.markers', 'REGISTRIES'
+//                property 'forge.logging.console.level', 'debug'
+//
+//                // Allow dependent mixins to run
+//                property 'mixin.env.remapRefMap', 'true'
+//                property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
+//
+//                mods {
+//                    // TODO: Dynamic names??
+//                    examplemod {
+//                        source sourceSets.main
+//                    }
+//                }
+//            }
+//
+//            server {
+//                workingDirectory project.file('run')
+//
+//                // Allow dependent mixins to run
+//                property 'mixin.env.remapRefMap', 'true'
+//                property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
+//
+//                mods {
+//                    // TODO: Dynamic names??
+//                    examplemod {
+//                        source sourceSets.main
+//                    }
+//                }
+//            }
+//
+//            data {
+//                workingDirectory project.file('run')
+//
+//                // Allow dependent mixins to run
+//                property 'mixin.env.remapRefMap', 'true'
+//                property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
+//
+//                // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
+//                args '--mod', modId, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+//
+//                mods {
+//                    // TODO: Dynamic names??
+//                    examplemod {
+//                        source sourceSets.main
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     configurations {
         shade
@@ -120,9 +106,17 @@ subprojects {
 
     repositories {
         // Registrate
+//        maven {
+//            url "https://maven.tterrag.com/"
+//        }
+
         maven {
-            url "https://maven.tterrag.com/"
+            name = 'Fabric'
+            url = 'https://maven.fabricmc.net/'
         }
+
+        mavenCentral()
+        gradlePluginPortal()
 
         // Rover's temp maven.
         maven {
@@ -134,23 +128,11 @@ subprojects {
     }
 
     dependencies {
-        minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-
-        def registrate = "com.tterrag.registrate:Registrate:MC${minecraft_version}-${registrate_version}"
-        implementation fg.deobf(registrate)
-        shade registrate
-
-        // Apply Mixin AP
-        if (enableMixin)
-            annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
-    }
-
-    if (enableMixin) {
-        mixin {
-            // MixinGradle Settings
-            add sourceSets.main, "mixins.${modId}.refmap.json"
-            config "mixins.${modId}.json"
-        }
+        minecraft "com.mojang:minecraft:${project.minecraft_version}"
+//        mappings loom.officialMojangMappings()
+        mappings "net.fabricmc:yarn:${project.yarn_mappings}"
+        modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+        modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     }
 
     // Example for how to get properties into the manifest for reading at runtime.
@@ -176,19 +158,18 @@ subprojects {
         delete "$buildDir/libs"
     }
 
-    shadowJar {
-        configurations = [project.configurations.shade]
-        relocate 'com.tterrag.registrate', 'com.enderio.repack.registrate'
-    }
+//    shadowJar {
+//        configurations = [project.configurations.shade]
+//    }
 
-    reobf {
-        shadowJar {}
-    }
+//    reobf {
+//        shadowJar {}
+//    }
 
     if (project.hasProperty("releaseBuild") && project.releaseBuild == true) {
-        jar.finalizedBy('reobfJar')
+//        jar.finalizedBy('reobfJar')
     }
-    publish.dependsOn('reobfJar')
+//    publish.dependsOn('reobfJar')
 
     publishing {
         publications {

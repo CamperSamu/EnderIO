@@ -1,6 +1,6 @@
-minecraft {
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-}
+//minecraft {
+//    accessTransformer = file('src/main/resources/META-INF/accesstransformer.aw')
+//}
 
 dependencies {
     implementation project(':endercore')
